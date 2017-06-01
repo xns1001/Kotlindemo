@@ -1,9 +1,10 @@
-package me.xns.kotlin.demo
+package me.xns.kotlin.demo.ui
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
+import me.xns.kotlin.demo.R
 
 class MainActivity : AppCompatActivity() {
 
