@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Kotlin-demo</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_movie">电影</string>
+    <string name="title_book">图书</string>
+    <string name="title_music">音乐</string>
 </resources>
