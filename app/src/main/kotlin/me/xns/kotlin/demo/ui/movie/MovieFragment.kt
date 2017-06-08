@@ -1,14 +1,19 @@
 package me.xns.kotlin.demo.ui.movie
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearLayoutManager.HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_main_movie.*
 import me.xns.kotlin.demo.R
 import me.xns.kotlin.demo.model.ApiManager
+import me.xns.kotlin.demo.model.bean.Subject
 import me.xns.kotlin.demo.model.bean.TheaterInfo
 import me.xns.kotlin.demo.ui.BaseFragment
 import me.xns.kotlin.demo.util.Logger
@@ -28,14 +33,23 @@ class MovieFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val observable = ApiManager.movieApi.getInTheaters()
-
         observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Observer<TheaterInfo> {
                     override fun onComplete() {
                     }
 
                     override fun onNext(t: TheaterInfo?) {
                         Logger.d(msg = "TheatorObserver::onNext:::" + t.toString())
+                        if (t == null) {
+                            showInTheaters(null)
+                            return
+                        }
+                        if (t.subjects.isEmpty()) {
+                            showInTheaters(null)
+                            return
+                        }
+                        showInTheaters(t.subjects)
                     }
 
                     override fun onError(e: Throwable?) {
@@ -46,6 +60,22 @@ class MovieFragment : BaseFragment() {
                     }
 
                 })
+    }
+
+    fun showInTheaters(list: List<Subject>?) {
+        Logger.d(msg = "list=$list")
+        if (list == null) {
+            tv_in_theater_top.visibility = View.GONE
+            recycler_in_theater.visibility = View.GONE
+            return
+        }
+        tv_in_theater_top.visibility = View.VISIBLE
+        recycler_in_theater.visibility = View.VISIBLE
+        val adapter = InTheaterAdapter(activity!!)
+        list?.let { adapter.data = list }
+        recycler_in_theater.layoutManager = LinearLayoutManager(activity, HORIZONTAL, false)
+        recycler_in_theater.adapter = adapter
+
     }
 
 }

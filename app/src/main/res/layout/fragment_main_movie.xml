@@ -5,7 +5,13 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_in_theater_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="music" />
+        android:text="正在热映" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_in_theater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
