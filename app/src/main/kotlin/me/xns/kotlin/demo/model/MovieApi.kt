@@ -1,7 +1,8 @@
 package me.xns.kotlin.demo.model
 
 import io.reactivex.Observable
-import me.xns.kotlin.demo.model.bean.TheaterInfo
+import me.xns.kotlin.demo.model.bean.MovieInfo
+import retrofit2.Call
 import retrofit2.http.GET
 
 /**
@@ -9,6 +10,8 @@ import retrofit2.http.GET
  */
 interface MovieApi {
     @GET("in_theaters")
-    fun getInTheaters(): Observable<TheaterInfo>
+    fun getInTheaters(): Observable<MovieInfo>
 
+    @GET("coming_soon")
+    fun getCommingSoon(): Call<MovieInfo>
 }

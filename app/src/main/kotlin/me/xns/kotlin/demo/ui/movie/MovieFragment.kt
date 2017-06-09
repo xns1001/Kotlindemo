@@ -13,10 +13,14 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main_movie.*
 import me.xns.kotlin.demo.R
 import me.xns.kotlin.demo.model.ApiManager
+import me.xns.kotlin.demo.model.bean.MovieInfo
 import me.xns.kotlin.demo.model.bean.Subject
-import me.xns.kotlin.demo.model.bean.TheaterInfo
 import me.xns.kotlin.demo.ui.BaseFragment
 import me.xns.kotlin.demo.util.Logger
+import me.xns.kotlin.ui.SpacesItemDecoration
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 /**
  * Created by xiongningsheng on 2017/6/5.
@@ -35,11 +39,11 @@ class MovieFragment : BaseFragment() {
         val observable = ApiManager.movieApi.getInTheaters()
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<TheaterInfo> {
+                .subscribe(object : Observer<MovieInfo> {
                     override fun onComplete() {
                     }
 
-                    override fun onNext(t: TheaterInfo?) {
+                    override fun onNext(t: MovieInfo?) {
                         Logger.d(msg = "TheatorObserver::onNext:::" + t.toString())
                         if (t == null) {
                             showInTheaters(null)
@@ -60,6 +64,22 @@ class MovieFragment : BaseFragment() {
                     }
 
                 })
+        val call = ApiManager.movieApi.getCommingSoon()
+        call.enqueue(object : Callback<MovieInfo> {
+            override fun onFailure(call: Call<MovieInfo>?, t: Throwable?) {
+            }
+
+            override fun onResponse(call: Call<MovieInfo>?, response: Response<MovieInfo>?) {
+                response?.let {
+                    val body = response.body()
+                    body?.let {
+                        Logger.d(msg = "coming-soon response=$body")
+                    }
+                }
+            }
+
+
+        })
     }
 
     fun showInTheaters(list: List<Subject>?) {
@@ -74,6 +94,7 @@ class MovieFragment : BaseFragment() {
         val adapter = InTheaterAdapter(activity!!)
         list?.let { adapter.data = list }
         recycler_in_theater.layoutManager = LinearLayoutManager(activity, HORIZONTAL, false)
+        recycler_in_theater.addItemDecoration(SpacesItemDecoration(20, SpacesItemDecoration.Orientation.horizontal))
         recycler_in_theater.adapter = adapter
 
     }

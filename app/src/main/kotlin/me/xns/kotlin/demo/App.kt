@@ -14,8 +14,14 @@ class App : Application() {
         super.attachBaseContext(base)
         Logger.d(logTag, "attachBaseContext")
     }
+
     override fun onCreate() {
         super.onCreate()
+        instance = this
         Logger.d(logTag, "onCreate")
+    }
+
+    companion object {
+        lateinit var instance: App
     }
 }
